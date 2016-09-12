@@ -1,5 +1,6 @@
 package gr.hua.springrest.controllers;
 
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -14,7 +15,9 @@ public class UsersController {
 	
 	@RequestMapping(value = "user/{userId:\\d+}", method = RequestMethod.GET)
 	public User getuser(@PathVariable("userId") int userId){
-		 User user =  new User(userId, "","","", "","");
+		 User user =  new User();
+		 user.setId(userId);
+		 
 		 return user;
 	}
 

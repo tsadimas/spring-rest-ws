@@ -2,56 +2,58 @@ package gr.hua.springrest.models;
 
 import java.io.Serializable;
 
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlRootElement;
+
+@XmlRootElement(name = "user")
 public class User implements Serializable {
 
+	
+	private static final long serialVersionUID = 6912511247705602214L;
 	private String name;
-
 	private String email;
 	private int id;
 	private String country;
 	private String password;
-
 	private String phone;
+
 	
-	public User(int id, String name, String email, String country, String password, String phone){
-		this.id=id;
-		this.name=name;
-		this.email = email;
-		this.country = country;
-		this.password = password;
-		this.phone = phone;
-	}
 
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-	public void setId(int id) {
-		this.id = id;
-	}
-
-	public void setCountry(String country) {
-		this.country = country;
+	@Override
+	public String toString() {
+		return "Name=" + this.name + ", Email=" + this.email + ", Country=" + this.country;
 	}
 
 	public String getName() {
 		return name;
 	}
 
+	public void setName(String name) {
+		this.name = name;
+	}
+
 	public String getEmail() {
 		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
 	public int getId() {
 		return id;
 	}
 
+	public void setId(int id) {
+		this.id = id;
+	}
+
 	public String getCountry() {
 		return country;
+	}
+
+	public void setCountry(String country) {
+		this.country = country;
 	}
 
 	public String getPassword() {
@@ -68,11 +70,6 @@ public class User implements Serializable {
 
 	public void setPhone(String phone) {
 		this.phone = phone;
-	}
-
-	@Override
-	public String toString() {
-		return "Name=" + this.name + ", Email=" + this.email + ", Country=" + this.country;
 	}
 
 }
