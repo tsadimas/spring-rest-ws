@@ -21,6 +21,11 @@
 		<beans:property name="suffix" value=".jsp" />
 	</beans:bean>
 		
+		
+	<beans:bean id="userList" class="gr.hua.springrest.models.UserList">
+	</beans:bean>
+	
+		
 	<context:component-scan base-package="gr.hua.springrest" />
 	
 	
