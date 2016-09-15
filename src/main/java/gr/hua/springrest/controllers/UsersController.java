@@ -71,6 +71,7 @@ public class UsersController {
 	
 	@RequestMapping(value = "user/createjson", method= RequestMethod.POST)
 	public User createUserfromJson(@RequestBody User user){
+		
 		return user;
 	}
 
