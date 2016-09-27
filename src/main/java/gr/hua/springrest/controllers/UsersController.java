@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import gr.hua.springrest.dao.UserDAO;
 import gr.hua.springrest.models.User;
 import gr.hua.springrest.models.UserList;
 
@@ -22,6 +24,10 @@ public class UsersController {
 	
 	@Autowired
 	UserList userList;
+	
+	@Autowired
+	@Qualifier("userDAO")
+	private UserDAO userDAO;
 
 	@RequestMapping(value = "user/{userId:\\d+}", method = RequestMethod.GET)
 	public User getuser(@PathVariable("userId") int userId) {
@@ -34,17 +40,8 @@ public class UsersController {
 
 	@RequestMapping(value = "user/all", method= RequestMethod.GET,  produces = {"application/json","application/xml"})
 	public UserList getUsers() {
-		List<User> userlist = new ArrayList<User>();
-		User user1 = new User();
-		user1.setId(1);
-		user1.setName("Argiris");
-		userlist.add(user1);
-
-		User user2 = new User();
-		user2.setId(2);
-		user2.setName("Iason");
-		userlist.add(user2);
-
+		List<User> userlist = userDAO.getAll();
+		
 		this.userList.setUserList(userlist);
 		return this.userList;
 
