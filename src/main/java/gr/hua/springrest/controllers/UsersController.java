@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -55,17 +56,17 @@ public class UsersController {
 	}
 
 	@RequestMapping(value = "user/all", method= RequestMethod.GET,  produces = {"application/json","application/xml"})
-	public UserList getUsers(HttpServletRequest request) throws Exception {
+	public UserList getUsers(@RequestHeader("Token") String token,HttpServletRequest request) throws Exception {
 		
-		String token=request.getHeader("Token");
-		
-		logger.info("--<<<----" + token);
-		
-		User u=jwtService.parseToken(token);
-
-		if (u == null) {
-			throw new Exception("Token error");
-		}
+//		token=request.getHeader("Token");
+//		
+//		logger.info("--<<<----" + token);
+//		
+//		User u=jwtService.parseToken(token);
+//
+//		if (u == null) {
+//			throw new Exception("Token error");
+//		}
 		
 		List<User> userlist = userDAO.getAll();
 		
