@@ -4,6 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.MediaType;
@@ -14,6 +19,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import gr.hua.springrest.HomeController;
+import gr.hua.springrest.dao.JwtService;
 import gr.hua.springrest.dao.UserDAO;
 import gr.hua.springrest.models.User;
 import gr.hua.springrest.models.UserList;
@@ -22,12 +29,21 @@ import gr.hua.springrest.models.UserList;
 @RequestMapping(value = "/users")
 public class UsersController {
 	
+	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
+	private final JwtService jwtService;
+
+
 	@Autowired
 	UserList userList;
 	
 	@Autowired
 	@Qualifier("userDAO")
 	private UserDAO userDAO;
+	
+	@Autowired
+	public UsersController(JwtService jwtService) {
+		this.jwtService = jwtService;
+	}
 
 	@RequestMapping(value = "user/{userId:\\d+}", method = RequestMethod.GET)
 	public User getuser(@PathVariable("userId") int userId) {
@@ -39,7 +55,18 @@ public class UsersController {
 	}
 
 	@RequestMapping(value = "user/all", method= RequestMethod.GET,  produces = {"application/json","application/xml"})
-	public UserList getUsers() {
+	public UserList getUsers(HttpServletRequest request) throws Exception {
+		
+		String token=request.getHeader("Token");
+		
+		logger.info("--<<<----" + token);
+		
+		User u=jwtService.parseToken(token);
+
+		if (u == null) {
+			throw new Exception("Token error");
+		}
+		
 		List<User> userlist = userDAO.getAll();
 		
 		this.userList.setUserList(userlist);

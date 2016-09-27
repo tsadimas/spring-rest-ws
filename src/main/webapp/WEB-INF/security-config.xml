@@ -16,17 +16,31 @@ http://www.springframework.org/schema/beans/spring-beans-4.0.xsd">
 		<beans:property name="password" value="alekos1111" />
 	</beans:bean>
 
-<beans:bean id="userDAO" class="gr.hua.springrest.dao.UserDAOImpl">
+	<beans:bean id="userDAO" class="gr.hua.springrest.dao.UserDAOImpl">
 		<beans:property name="dataSource" ref="dataSource" />
 	</beans:bean>
+	
+	<beans:bean id="jwtService" class="gr.hua.springrest.dao.JwtService">
+	</beans:bean>
+	
+	<beans:bean id="jwtAuthenticationFilter" class="gr.hua.springrest.JwtAuthenticationFilter">
+		<beans:property name="jwtService" ref="jwtService" />
+	</beans:bean>
 
+<beans:bean id="restAuthenticationEntryPoint" class="gr.hua.springrest.RestAuthenticationEntryPoint">
+	</beans:bean>
+	
 	<http security="none" pattern="/resource/**" />
 
-	<http auto-config="true">
-		<intercept-url pattern="/login" access="permitAll" />
-		<intercept-url pattern="/**/*"
-			access="hasAnyRole('ROLE_USER','ROLE_ADMIN')" />
+	<http pattern="/api/login" security="none"/>   
+    <http pattern="/api/signup" security="none"/>
+
+	<http pattern="/users/**" entry-point-ref="restAuthenticationEntryPoint"
+		create-session="stateless">
+		<csrf disabled="true" />
+		<custom-filter before="FORM_LOGIN_FILTER" ref="jwtAuthenticationFilter" />
 	</http>
+
 
 	<authentication-manager>
 		<authentication-provider>

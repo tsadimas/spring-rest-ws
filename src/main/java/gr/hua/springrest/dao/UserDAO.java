@@ -16,4 +16,6 @@ public interface UserDAO {
   public boolean deleteById(int id);
   //Get All
   public List<User> getAll();
+  //login
+  public User login(String username,String password);
 }
