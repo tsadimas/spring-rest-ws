@@ -5,6 +5,10 @@ import java.io.Serializable;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
+@ApiModel
 @XmlRootElement(name = "user")
 public class User implements Serializable {
 
@@ -48,6 +52,7 @@ public class User implements Serializable {
 		this.id = id;
 	}
 
+	@ApiModelProperty(notes="The user's Country")
 	public String getCountry() {
 		return country;
 	}

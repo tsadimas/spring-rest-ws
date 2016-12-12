@@ -25,6 +25,7 @@ import gr.hua.springrest.dao.JwtService;
 import gr.hua.springrest.dao.UserDAO;
 import gr.hua.springrest.models.User;
 import gr.hua.springrest.models.UserList;
+import io.swagger.annotations.ApiOperation;
 
 @RestController
 @RequestMapping(value = "/users")
@@ -46,6 +47,7 @@ public class UsersController {
 		this.jwtService = jwtService;
 	}
 
+	@ApiOperation(value="getUserfromId")
 	@RequestMapping(value = "user/{userId:\\d+}", method = RequestMethod.GET)
 	public User getuser(@PathVariable("userId") int userId) {
 		User user = new User();

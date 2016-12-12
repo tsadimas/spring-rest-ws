@@ -26,17 +26,7 @@
 	</beans:bean>
 
 
-	<!-- Setup a simple strategy: 1. Take all the defaults. 2. Return XML by 
-		default when not sure. -->
-	<beans:bean id="contentNegotiationManager"
-		class="org.springframework.web.accept.ContentNegotiationManagerFactoryBean">
-		<beans:property name="defaultContentType" value="application/json" />
-	</beans:bean>
-
-	<!-- Make this available across all of Spring MVC -->
-	<mvc:annotation-driven
-		content-negotiation-manager="contentNegotiationManager" />
-
+	
 	<mvc:resources mapping="/swagger-ui.html" location="classpath:/META-INF/resources/" />
 	<mvc:resources mapping="/webjars/**"
 		location="classpath:/META-INF/resources/webjars/" />
