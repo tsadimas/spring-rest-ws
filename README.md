@@ -17,10 +17,9 @@ To deploy to remote tomcat server:
 </settings>
 </code>
 *create a run configuration with mavenand define tomcat7:redeploy as goal
-
-Make sure that on the remote server, on tomcat-users.xml there are defined the following roles:
+*Make sure that on the remote server, on tomcat-users.xml there are defined the following roles:
 <code>
-<role rolename="tomcat-user"/>
+   <role rolename="tomcat-user"/>
    <role rolename="tomcat"/>
    <role rolename="admin"/>
    <role rolename="admin-gui"/>
