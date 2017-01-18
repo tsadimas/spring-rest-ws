@@ -77,13 +77,25 @@ public class UsersController {
 
 	}
 	
-	@RequestMapping(value = "user/create", method= RequestMethod.POST)
-	public User createUser(
+	@RequestMapping(value = "user/create", method= RequestMethod.POST, produces = {"application/json","application/xml"})
+	public User createUser(@RequestHeader("Token") String token,HttpServletRequest request,
 			@RequestParam("name") String name,
 			@RequestParam("email") String email, 
 			@RequestParam(value="country", required=false) String country,
 			@RequestParam("password") String password,
-			@RequestParam(value="phone", required=false) String phone){
+			@RequestParam(value="phone", required=false) String phone) throws Exception{
+		
+		token=request.getHeader("Token");
+		
+		logger.info("--<<< >>>>----" + token);
+		
+		User u=jwtService.parseToken(token);
+
+		if (u == null) {
+			throw new Exception("Token error");
+		}
+		
+		
 		User user= new User();
 		user.setName(name);
 		user.setEmail(email);
@@ -91,8 +103,15 @@ public class UsersController {
 		user.setCountry(country);
 		user.setPhone(phone);
 		//create random number to simulate a database entry
-		Random random = new Random();
-		user.setId(random.nextInt(10 - 2 + 1) + 2);
+		//Random random = new Random();
+		//user.setId(random.nextInt(10 - 2 + 1) + 2);
+		try{
+		int id=userDAO.save(user);
+		logger.info("--<<< ID >>>>----" + id);
+		user.setId(id);
+		}catch(Exception Ex){
+			logger.info(Ex.getMessage());
+		}
 		return user;
 	}
 	
