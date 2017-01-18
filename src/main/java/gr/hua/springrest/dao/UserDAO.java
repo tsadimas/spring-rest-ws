@@ -7,7 +7,7 @@ import gr.hua.springrest.models.User;
 public interface UserDAO {
    
   //Create
-  public void save(User user);
+  public int save(User user);
   //Read
   public User getById(int id);
   //Update
