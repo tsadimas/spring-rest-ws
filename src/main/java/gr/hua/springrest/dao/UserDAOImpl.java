@@ -1,5 +1,8 @@
 package gr.hua.springrest.dao;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -14,6 +17,10 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.jca.cci.InvalidResultSetAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.PreparedStatementCreator;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 
 import gr.hua.springrest.HomeController;
 import gr.hua.springrest.models.User;
@@ -31,11 +38,37 @@ public class UserDAOImpl implements UserDAO {
 	}
 
 	@Override
-	public void save(User user) {
+	public int save(User user) {
 		JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-		jdbcTemplate.update("insert into Users (name, email, phone, country, password) values (?, ?, ?, ?, ?)", user.getName(),
-				user.getEmail(), user.getPhone(), user.getCountry(), user.getPassword());
+//		jdbcTemplate.update("insert into Users (name, email, phone, country, password) values (?, ?, ?, ?, ?)", user.getName(),
+//				user.getEmail(), user.getPhone(), user.getCountry(), user.getPassword());
 
+		String INSERT_SQL = "insert into Users (name, email, country, password) values (?, ?, ?, ?)";
+		KeyHolder keyHolder = new GeneratedKeyHolder();
+		logger.info("--<<< before >>>>----");
+		try {
+		jdbcTemplate.update(
+		    new PreparedStatementCreator() {
+		        public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
+		            PreparedStatement ps =
+		                connection.prepareStatement(INSERT_SQL, new String[] {"id"});
+		            ps.setString(1,  user.getName());
+		            ps.setString(2,  user.getEmail());
+		            ps.setString(3,  user.getCountry());
+		            ps.setString(4,  user.getPassword());
+		            
+		            return ps;
+		        }
+		    },
+		    keyHolder);}
+		catch (Exception ex) {
+			logger.info(ex.getMessage());
+		}
+		logger.info("--<<< after >>>>----");
+		logger.info("--<<< after ID >>>>----" +  keyHolder.getKey());
+
+	
+	return  keyHolder.getKey().intValue();
 	}
 
 	@Override
