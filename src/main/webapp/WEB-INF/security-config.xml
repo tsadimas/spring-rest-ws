@@ -11,33 +11,38 @@ http://www.springframework.org/schema/beans/spring-beans-4.0.xsd">
 		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
 		<beans:property name="driverClassName" value="com.mysql.jdbc.Driver" />
 		<beans:property name="url"
-			value="jdbc:mysql://83.212.105.20:3306/rg" />
-		<beans:property name="username" value="rg" />
-		<beans:property name="password" value="alekos1111" />
+			value="jdbc:mysql://83.212.98.103:3306/distr" />
+		<beans:property name="username" value="distr" />
+		<beans:property name="password" value="d1stR" />
 	</beans:bean>
 
 	<beans:bean id="userDAO" class="gr.hua.springrest.dao.UserDAOImpl">
 		<beans:property name="dataSource" ref="dataSource" />
 	</beans:bean>
-	
+
 	<beans:bean id="jwtService" class="gr.hua.springrest.dao.JwtService">
 	</beans:bean>
-	
+
 	<beans:bean id="jwtAuthenticationFilter" class="gr.hua.springrest.JwtAuthenticationFilter">
 		<beans:property name="jwtService" ref="jwtService" />
 	</beans:bean>
 
-<beans:bean id="restAuthenticationEntryPoint" class="gr.hua.springrest.RestAuthenticationEntryPoint">
+	<beans:bean id="restAuthenticationEntryPoint"
+		class="gr.hua.springrest.RestAuthenticationEntryPoint">
 	</beans:bean>
 	
+	<beans:bean id="CORSFilter" class="gr.hua.springrest.CORSFilter">
+	</beans:bean>
+
 	<http security="none" pattern="/resource/**" />
 
-	<http pattern="/api/login" security="none"/>   
-    <http pattern="/api/signup" security="none"/>
+	<http pattern="/api/login" security="none" />
+	<http pattern="/api/signup" security="none" />
 
 	<http pattern="/users/**" entry-point-ref="restAuthenticationEntryPoint"
 		create-session="stateless">
 		<csrf disabled="true" />
+		<custom-filter before="SECURITY_CONTEXT_FILTER" ref="CORSFilter" />
 		<custom-filter before="FORM_LOGIN_FILTER" ref="jwtAuthenticationFilter" />
 	</http>
 
@@ -47,9 +52,9 @@ http://www.springframework.org/schema/beans/spring-beans-4.0.xsd">
 			<jdbc-user-service data-source-ref="dataSource"
 				users-by-username-query="select name as username ,password, enabled from Users where name=?"
 				authorities-by-username-query="SELECT name as username, authority as role
-FROM Users, User_roles
-WHERE name =  ?
-AND Users.id = User_roles.user_id" />
+												FROM Users, User_roles
+												WHERE name =  ?
+												AND Users.id = User_roles.user_id" />
 		</authentication-provider>
 	</authentication-manager>
 
