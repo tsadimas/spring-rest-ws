@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.DataAccessException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jca.cci.InvalidResultSetAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -141,12 +142,21 @@ public class UserDAOImpl implements UserDAO {
 		
 		String query = "select * from Users where name = ? and password = ?";
 		JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+		try {
+			Object queryForObject = jdbcTemplate.queryForObject(query, new Object[] { username, password },
+					new BeanPropertyRowMapper<User>(User.class));
 
-		Object queryForObject = jdbcTemplate.queryForObject(query, new Object[] { username, password },
-				new BeanPropertyRowMapper<User>(User.class));
-		User user = (User) queryForObject;
+			User user = (User) queryForObject;
 
-		return user;
+			return user;
+		} catch (EmptyResultDataAccessException e) {
+			return null;
+		}
+		
+
+	
 	}
+	
+	
 
 }

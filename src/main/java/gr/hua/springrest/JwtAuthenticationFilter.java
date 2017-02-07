@@ -66,6 +66,7 @@ public class JwtAuthenticationFilter implements Filter {
 			
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
+			logger.info("Exception JwtAuthenticationFilter " + e.getMessage());
 			res.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
 		}
 

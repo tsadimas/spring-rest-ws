@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import gr.hua.springrest.HomeController;
+import gr.hua.springrest.HttpUnauthorizedException;
 import gr.hua.springrest.dao.JwtService;
 import gr.hua.springrest.dao.UserDAO;
 import gr.hua.springrest.models.User;
@@ -44,11 +45,21 @@ public class LoginController {
 
 		try {
 			user = userDAO.login(username, password);
+			
+			if (user == null)
+			{
+				logger.info("---IN EXCEPTION NULL---");
+
+				throw new HttpUnauthorizedException();
+			}
 			logger.info(user.getName());
 			response.setHeader("Token", jwtService.tokenFor(user));
 			logger.info(jwtService.tokenFor(user).toString());
 		} catch (Exception e) {
-			throw new RuntimeException(e);
+			logger.info("---IN EXCEPTION---");
+
+			logger.info(e.getMessage());
+			throw new HttpUnauthorizedException();
 		}
 		return user;
 	}
