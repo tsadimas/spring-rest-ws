@@ -45,7 +45,7 @@ public class LoginController {
 
 		try {
 			user = userDAO.login(username, password);
-			
+			logger.info(user.toString());
 			if (user == null)
 			{
 				logger.info("---IN EXCEPTION NULL---");

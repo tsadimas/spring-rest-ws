@@ -150,6 +150,10 @@ public class UserDAOImpl implements UserDAO {
 
 			return user;
 		} catch (EmptyResultDataAccessException e) {
+			logger.info("EmptyResultDataAccessException " + e.getMessage());
+			return null;
+		}catch (Exception e) {
+			logger.info("Exception " + e.getMessage());
 			return null;
 		}
 		
